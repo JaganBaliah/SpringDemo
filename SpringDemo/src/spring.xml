@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ -->
+ 
+<beans 
+
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/context 
+     http://www.springframework.org/schema/context/spring-context.xsd"
+    
+	default-init-method="myInit" default-destroy-method="myCleanup">
+	
+	<context:annotation-config />
+	
+	<bean id="parenttriangle" class="org.jagan.spring.Triangle">
+		<property name="pointA" ref="pointA"></property>		
+	</bean>
+
+	<bean id="triangle1" class="org.jagan.spring.Triangle" parent="parenttriangle">
+		<property name="pointB" ref="pointB"></property>
+		<property name="pointC" ref="pointC"></property>
+	</bean>
+
+	<bean id="triangle2" class="org.jagan.spring.Triangle" parent="parenttriangle">
+		<property name="pointB" ref="pointB"></property>
+		<property name="pointC" ref="pointC"></property>
+	</bean>
+	
+	<bean id="pointA" class="org.jagan.spring.Point" init-method="mmyInit" destroy-method="mmyCleanup">
+		<property name="x" value="${pointA.pointX}"></property>
+		<property name="y" value="${pointA.pointY}"></property>
+	</bean>
+
+	<bean id="pointB" class="org.jagan.spring.Point">
+		<property name="x" value="-20"></property>
+		<property name="y" value="0"></property>
+	</bean>					
+	
+	<bean id="pointC" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="20"></property>
+	</bean>	
+
+	<alias name="triangle" alias="triangle-alias"/>
+	
+	<!-- 
+	<bean id="circle" class="org.jagan.spring.Circle" name="circle-name">
+	-->
+		<!-- <property name="center" ref="zeroPoint"></property> -->
+	<!--
+	</bean>
+	-->
+	<bean id="zeroPoint" class="org.jagan.spring.Point">
+		<qualifier value="circleRelated"/>
+		<property name="x" value="0"></property>
+		<property name="y" value="0"></property>
+	</bean>
+	
+	
+	<context:component-scan base-package="org.jagan.spring"/>
+	
+	<bean class="org.jagan.spring.DisplayNameBeanPostProcessor"></bean>
+	<bean class="org.jagan.spring.MyBeanFactoryPostProcessor"></bean>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="pointconfig.properties"></property>
+	</bean>
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+			<value>mymessage</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 
+	<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"></bean>
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"></bean>
+	-->	
+	<!-- Below is needed only from Spring 4 and not needed for previous versions of Spring 
+	<bean id="customAutowireConfigurer" class="org.springframework.beans.factory.annotation.CustomAutowireConfigurer">
+		<property name="customQualifierTypes">
+			<set>
+				<value>org.springframework.beans.factory.annotation.Qualifier</value>
+			</set>
+		</property>
+	</bean>
+	-->
+	
+</beans> 
+
+<!-- 
+<beans>
+	<bean id="triangle" class="org.jagan.spring.Triangle" >
+		<constructor-arg index="0" type="java.lang.String" value="Equilateral"/>
+		<constructor-arg index="1" type="int" value="20"/>
+	</bean>
+</beans>
+-->
+
+<!--
+<beans>
+	<bean id="triangle" class="org.jagan.spring.Triangle" name="triangle-name">
+		<property name="pointA">
+			<idref bean="zeroPoint"></idref>
+		</property>
+		
+		<property name="pointB">
+			<bean class="org.jagan.spring.Point">
+				<property name="x" value="-20"></property>
+				<property name="y" value="0"></property>
+			</bean>					
+		</property>
+		
+		<property name="pointC">
+			<bean id="point3" class="org.jagan.spring.Point">
+				<property name="x" value="0"></property>
+				<property name="y" value="20"></property>
+			</bean>	
+		</property>
+	</bean>
+	
+	<bean id="zeroPoint" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="0"></property>
+	</bean>
+		
+	<alias name="triangle" alias="triangle-alias"/>
+	
+</beans>
+-->
+<!--
+<beans>
+	<bean id="triangle" class="org.jagan.spring.Triangle" name="triangle-name">
+		<property name="points">
+			<list>
+				<ref bean="zeroPoint" />
+				<ref bean="point2" />
+				<ref bean="point3" />
+			</list>			
+		</property>
+	</bean>
+	
+	<bean id="zeroPoint" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="0"></property>
+	</bean>
+	
+	<bean id="point2" class="org.jagan.spring.Point">
+		<property name="x" value="-20"></property>
+		<property name="y" value="0"></property>
+	</bean>					
+	
+	<bean id="point3" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="20"></property>
+	</bean>
+	
+	<alias name="triangle" alias="triangle-alias"/>
+	
+</beans>
+ -->
+ 
+ <!-- 
+ <beans>
+	<bean id="triangle" class="org.jagan.spring.Triangle" name="triangle-name" autowire="byName">
+	
+	</bean>
+	
+	<bean id="pointA" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="0"></property>
+	</bean>
+
+	<bean id="pointB" class="org.jagan.spring.Point">
+		<property name="x" value="-20"></property>
+		<property name="y" value="0"></property>
+	</bean>					
+	
+	<bean id="pointC" class="org.jagan.spring.Point">
+		<property name="x" value="0"></property>
+		<property name="y" value="20"></property>
+	</bean>	
+
+	<alias name="triangle" alias="triangle-alias"/>
+	
+</beans>
+-->
